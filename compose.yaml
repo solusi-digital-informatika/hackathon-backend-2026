@@ -3,7 +3,7 @@ name: ai-production-workflow
 services:
   web:
     build:
-      context: ../frontend/hackathon-frontend-2026
+      context: ../frontend
     ports:
       - "127.0.0.1:${FRONTEND_PORT:-5173}:80"
     depends_on:
