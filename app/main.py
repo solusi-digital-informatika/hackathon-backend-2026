@@ -10,6 +10,8 @@ from app.modules.projects import model as _projects_model  # noqa: F401 – regi
 from app.modules.projects.router import router as projects_router
 from app.modules.shots import model as _shots_model  # noqa: F401 – registers ORM model
 from app.modules.shots.router import router as shots_router
+from app.modules.brief import model as _brief_model  # noqa: F401 – registers ORM model
+from app.modules.brief.router import router as brief_router
 
 
 @asynccontextmanager
@@ -29,6 +31,7 @@ app.add_middleware(
 
 app.include_router(projects_router)
 app.include_router(shots_router)
+app.include_router(brief_router)
 
 
 @app.exception_handler(404)

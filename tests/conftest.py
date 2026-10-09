@@ -35,6 +35,8 @@ def setup_test_db():
 def clean_projects():
     yield
     with engine.connect() as conn:
+        conn.execute(text("DELETE FROM project_briefs"))
+        conn.execute(text("DELETE FROM source_documents"))
         conn.execute(text("DELETE FROM shots"))
         conn.execute(text("DELETE FROM projects"))
         conn.commit()
