@@ -9,6 +9,7 @@ from app.core.errors import error_body
 from app.modules.projects.repository import ProjectRepository
 from app.modules.shots.repository import ShotRepository
 from app.modules.shots.schemas import ShotCreate, ShotList, ShotOut, ShotUpdate
+from app.modules.shots.model import ShotRevisionHead
 
 router = APIRouter(prefix="/projects/{project_id}/shots", tags=["shots"])
 
@@ -136,6 +137,9 @@ async def update_shot(
             content=error_body("validation_error", "Shot input is invalid", _validation_fields(exc)),
         )
 
+    db.refresh(shot, with_for_update=True)
+    if db.get(ShotRevisionHead, shot.id) and any(getattr(data, field) is not None for field in ('title', 'description', 'status')):
+        return JSONResponse(status_code=409, content=error_body('revision_required', 'Create and review a revision to change this versioned shot.'))
     shot = repo.update(shot, data)
     return ShotOut.model_validate(shot)
 
@@ -154,5 +158,7 @@ def delete_shot(project_id: str, shot_id: str, db: Session = Depends(get_db)):
             content=error_body("not_found", "Shot not found"),
         )
 
+    if db.get(ShotRevisionHead, shot.id):
+        return JSONResponse(status_code=409, content=error_body('revision_history_protected', 'This shot has version history and cannot be deleted.'))
     repo.delete(shot)
     return Response(status_code=204)

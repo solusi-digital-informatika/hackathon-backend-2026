@@ -57,6 +57,8 @@ class ShotUpdate(BaseModel):
 
 
 class ShotOut(BaseModel):
+    revision_summary: dict | None = None
+    generation_details: dict[str, str] | None = None
     id: str
     project_id: str
     sequence_order: int

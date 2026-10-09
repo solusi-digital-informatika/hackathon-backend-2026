@@ -60,6 +60,10 @@ class PropSpec(BaseModel):
 
 
 class ProjectBriefOut(BaseModel):
+    version: int | None = None
+    creative_sections: dict[str, str] | None = None
+    storyboard: list[dict] = Field(default_factory=list)
+    generated_shot_ids: list[str] = Field(default_factory=list)
     id: str
     project_id: str
     source_document_id: str | None
@@ -111,6 +115,15 @@ class BriefOut(BaseModel):
 
 
 class BriefUpdate(BaseModel):
+    creative_sections: dict[str, str] | None = None
+
+    @field_validator("creative_sections")
+    @classmethod
+    def validate_sections(cls, value):
+        if value is not None:
+            from app.modules.brief.creative import CreativeSections
+            return CreativeSections.model_validate(value).model_dump()
+        return value
     objective: str | None = None
     visual_style: str | None = None
     lighting_mood: str | None = None

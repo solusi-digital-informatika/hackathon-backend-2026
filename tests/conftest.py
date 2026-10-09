@@ -10,6 +10,7 @@ from app.core.database import Base, get_db
 from app.main import app
 import app.main as main_module
 from app.modules.moodboards.service import AnalysisRunner
+from app.modules.shots.images import ImageRunner
 
 TEST_URL = settings.test_database_url
 
@@ -57,6 +58,7 @@ def client(monkeypatch):
     # Startup and recovery also use the test DB, never production.
     monkeypatch.setattr(main_module, "engine", engine)
     monkeypatch.setattr(main_module, "AnalysisRunner", lambda: AnalysisRunner(session_factory=TestSession))
+    monkeypatch.setattr(main_module, "ImageRunner", lambda: ImageRunner(session_factory=TestSession))
     app.dependency_overrides[get_db] = override_get_db
     with TestClient(app) as c:
         yield c

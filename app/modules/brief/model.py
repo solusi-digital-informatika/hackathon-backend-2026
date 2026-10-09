@@ -2,7 +2,7 @@ import enum
 import uuid
 from datetime import datetime, timezone
 
-from sqlalchemy import DateTime, Enum, ForeignKey, String, Text
+from sqlalchemy import DateTime, Enum, ForeignKey, Integer, String, Text
 from sqlalchemy.orm import Mapped, mapped_column
 
 from app.core.database import Base
@@ -68,3 +68,12 @@ class ProjectBrief(Base):
     updated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), nullable=False, default=_now, onupdate=_now
     )
+
+
+class CreativePlan(Base):
+    __tablename__ = "creative_brief_plans"
+    brief_id: Mapped[str] = mapped_column(String(40), ForeignKey("project_briefs.id", ondelete="CASCADE"), primary_key=True)
+    version: Mapped[int] = mapped_column(Integer, nullable=False)
+    sections: Mapped[str] = mapped_column(Text, nullable=False)
+    storyboard: Mapped[str] = mapped_column(Text, nullable=False)
+    shot_ids: Mapped[str] = mapped_column(Text, nullable=False, default="[]")
