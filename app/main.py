@@ -8,6 +8,8 @@ from app.core.database import Base, engine
 from app.core.errors import error_body
 from app.modules.projects import model as _projects_model  # noqa: F401 – registers ORM model
 from app.modules.projects.router import router as projects_router
+from app.modules.shots import model as _shots_model  # noqa: F401 – registers ORM model
+from app.modules.shots.router import router as shots_router
 
 
 @asynccontextmanager
@@ -26,6 +28,7 @@ app.add_middleware(
 )
 
 app.include_router(projects_router)
+app.include_router(shots_router)
 
 
 @app.exception_handler(404)
