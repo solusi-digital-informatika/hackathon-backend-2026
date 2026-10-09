@@ -1,0 +1,10 @@
+.git
+.env
+.env.*
+!.env.example
+.venv
+__pycache__
+*.pyc
+.pytest_cache
+data
+hackathon-backend-2026
